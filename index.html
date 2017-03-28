@@ -22,7 +22,12 @@
 
         </div>
         <div data-role="content">
-           <ul id="list_home" data-role="listview" data-icon="false" data-filter="true">
+           <ul
+               id="list_home"
+               data-role="listview"
+               data-icon="false"
+               data-filter="true"
+               data-filter-placeholder="Busca tu perro">
                 Cargando perros....
             </ul>
 
@@ -35,6 +40,12 @@
     <!-- /pageHome -->
 
     <div data-role="page" id="page2" class=""> Kaixo <a href="#pageHome">Ir a Home</a> </div>
+
+
+     <div data-role="dialog" id="page_detalle">
+              mODAL
+     </div>
+
     <!-- /page -->
     <!-- Script -->
     <script src="js/jquery.min.js"></script>
@@ -52,9 +63,13 @@
     var perros = []; //array con perros
     var perro_seleccionado;
 
+
+
 $(function() {
     console.log( "ready!" );
 
+
+    //llamada Ajax
     $.ajax(endpoint + "perro/", {
         "type": "get"
         , "encoding": "UTF-8"
@@ -82,13 +97,13 @@ $(function() {
 
 function refreshListView(){
 
-    $list = $('#list_home');
+     $list = $('#list_home');
     $list.html('');
     console.log('limpiada lista');
 
-    var li = '<li>'+
+    var li = '<li onClick="detalle_perro(#posicion#)">'+
                  '<a href="#">'+
-                     '<img src="images/perro_default_avatar.jpg" class="ui-thumbnail ui-thumbnail-circular" />'+
+                     '<img src="#perro.imagen#" class="ui-thumbnail ui-thumbnail-circular" />'+
                      '<h2>#perro.nombre#</h2>'+
                      '<p>#perro.raza#</p>'+
                  '</a>'+
@@ -98,16 +113,33 @@ function refreshListView(){
     var item;
     $.each(perros, function(i,v){
         item = li;
+        item = item.replace('#posicion#', i);
+        item = item.replace('#perro.imagen#', v.imagen);
         item = item.replace('#perro.nombre#', v.nombre);
         item = item.replace('#perro.raza#', v.raza);
         content += item;
     });
 
     $list.html(content).listview('refresh');
+    console.log('lista recargada');
 
+    //registar click en listview
+    /*
+     $list.click(function(event){
+         console.debug('click %o' , event.target.parentElement );
+     });
+    */
 
 }
 
+
+function detalle_perro( posicion ){
+    console.debug('pulsado %i elemento de la lista valor %o', posicion, perros[posicion]);
+
+    // Dialog present in a multipage document
+    $.mobile.changePage( "#page_detalle", { role: "dialog" } );
+
+}
 
 </script>
 
