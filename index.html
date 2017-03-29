@@ -28,7 +28,7 @@
                data-icon="false"
                data-filter="true"
                data-filter-placeholder="Busca tu perro">
-                Cargando perros....
+               <li>Cargando perros....</li>
             </ul>
 
         </div>
@@ -39,14 +39,39 @@
     </div>
     <!-- /pageHome -->
 
-    <div data-role="page" id="page2" class=""> Kaixo <a href="#pageHome">Ir a Home</a> </div>
+   <!-- page2 -->
+    <div data-role="page" id="page2" class="">
+        Kaixo <a href="#pageHome">Ir a Home</a>
+    </div>
+    <!-- /page2 -->
 
 
+    <!-- page_detalle -->
      <div data-role="dialog" id="page_detalle">
-              mODAL
-     </div>
 
-    <!-- /page -->
+        <div data-role="header">
+            <h1 class='nd-title' id="detalle_perro_titulo">Anonimo</h1>
+        </div>
+
+        <div data-role="content">
+            <img id="detalle_perro_imagen" src="#" alt="imagen del perro"/>
+            <p>Raza: <span id="detalle_perro_raza">Sin raza</span></p>
+            <a href="#"
+               data-rel="back"
+               data-role="button"
+               data-inline="true"
+               class="ui-btn ui-btn-primary">
+                   <i class='zmdi zmdi-edit'></i>&nbsp;Modificar
+            </a>
+
+            <a href="#" data-rel="back" data-role="button" data-inline="true" class="ui-btn ui-btn-raised clr-warning waves-effect">
+                <i class='zmdi zmdi-delete'></i>&nbsp;&nbsp;&nbsp;Eliminar
+            </a>
+        </div>
+     </div>
+   <!-- /page_detalle -->
+
+
     <!-- Script -->
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
@@ -80,16 +105,23 @@ $(function() {
             console.log("Llego el contenido y no hubo error", result);
 
             perros = [];
-            $.each(result, function(i,v){
-               perros.push(v);
-            });
 
-            console.debug('cargados %i perros', perros.length );
-            refreshListView();
+            if ( result == undefined ){
+                $('#list_home').html('<li style="color:red;">No Existen perro todavia, por favor da de alta uno.</li>');
+
+            }else{
+                $.each(result, function(i,v){
+                   perros.push(v);
+                });
+
+                console.debug('cargados %i perros', perros.length );
+                refreshListView();
+            }
 
         }
         , "error": function (result) {
             console.error("Este callback maneja los errores", result);
+            $('#list_home').html('<li style="color:red;">Servidor parado, perdona las molestias.</li>');
         }
     });
 
@@ -97,7 +129,7 @@ $(function() {
 
 function refreshListView(){
 
-     $list = $('#list_home');
+    $list = $('#list_home');
     $list.html('');
     console.log('limpiada lista');
 
@@ -122,13 +154,6 @@ function refreshListView(){
 
     $list.html(content).listview('refresh');
     console.log('lista recargada');
-
-    //registar click en listview
-    /*
-     $list.click(function(event){
-         console.debug('click %o' , event.target.parentElement );
-     });
-    */
 
 }
 
