@@ -1,147 +1,180 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Perrera Client</title>
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
-    <link rel="stylesheet" href="vendor/waves/waves.min.css" />
-    <link rel="stylesheet" href="vendor/wow/animate.css" />
-    <link rel="stylesheet" href="css/nativedroid2.css" />
-    <link rel="stylesheet" href="css/nativedroid2.color.teal.css">
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700"> </head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Perrera Client</title>
+        <link rel="shortcut icon" href="favicon.ico">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+        <link rel="stylesheet" href="vendor/waves/waves.min.css" />
+        <link rel="stylesheet" href="vendor/wow/animate.css" />
+        <link rel="stylesheet" href="css/nativedroid2.css" />
+        <link rel="stylesheet" href="css/nativedroid2.color.teal.css">
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700"> </head>
 
-<body>
-    <!-- pageHome -->
-    <div data-role="page" id="pageHome" data-position="fixed">
-        <div data-role="header">
-            <h1>Listado Perros</h1>
+    <body>
+        <!-- pageHome -->
+        <div data-role="page" id="pageHome" data-position="fixed">
+            <div data-role="header">
+                <h1>Listado Perros</h1>
 
+            </div>
+            <div data-role="content">
+               <ul id="list_home" data-role="listview" data-icon="false" data-filter="true" data-filter-placeholder="Busca tu perro">
+                    <li>Cargando perros....</li>
+                </ul>
+
+            </div>
+            <div id="pie" data-role="footer" data-position="fixed">
+                 Mostrando X perros
+                 <a href="#page2">Ir a Pagina2</a>
+            </div>
         </div>
-        <div data-role="content">
-           <ul
-               id="list_home"
-               data-role="listview"
-               data-icon="false"
-               data-filter="true"
-               data-filter-placeholder="Busca tu perro">
-                Cargando perros....
-            </ul>
+        <!-- /pageHome -->
+        
+        <!-- page 2 -->
+        <div data-role="page" id="page2" class=""> Kaixo <a href="#pageHome">Ir a Home</a> </div>
+        <!-- /page 2 -->
+        
+        <!-- Modal -->
 
+        <div data-role="dialog" id="page_detalle" class=""> 
+            <div data-role="header">
+               <h1 class='nd-title' id="detalle_perro_titulo">Anonimo</h1>  
+            </div>
+            
+            <div data-role="content">
+                <img id="detalle_perro_imagen" src="#" alt="imagen del perro"/>
+                <p>Raza: <span id="detalle_perro_raza">Sin raza</span></p>
+                <a href="#" id="modificar_perro" data-rel="back" data-role="button" data-inline="true" class="ui-btn ui-btn-primary">
+                    <i class='zmdi zmdi-edit'></i>&nbsp;Modificar
+                </a>
+
+                <a href="#" id="eliminar_perro" data-rel="back" data-role="button" data-inline="true" class="ui-btn ui-btn-raised clr-warning waves-effect">
+                    <i class='zmdi zmdi-delete'></i>&nbsp;&nbsp;&nbsp;Eliminar
+                </a>
         </div>
-        <div data-role="footer" data-position="fixed">
-             Mostrando X perros
-             <a href="#page2">Ir a Pagina2</a>
-        </div>
-    </div>
-    <!-- /pageHome -->
-
-    <div data-role="page" id="page2" class=""> Kaixo <a href="#pageHome">Ir a Home</a> </div>
-
-
-     <div data-role="dialog" id="page_detalle">
-              mODAL
      </div>
+            
+            
+        </div>
+        <!-- /Modal -->
+        
+        <!-- Script -->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        <script src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script src="vendor/waves/waves.min.js"></script>
+        <script src="vendor/wow/wow.min.js"></script>
+        <script src="js/nativedroid2.js"></script>
+        <script src="nd2settings.js"></script>
+        <!-- Script:end -->
 
-    <!-- /page -->
-    <!-- Script -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-ui.min.js"></script>
-    <script src="js/jquery.mobile-1.4.5.min.js"></script>
-    <script src="vendor/waves/waves.min.js"></script>
-    <script src="vendor/wow/wow.min.js"></script>
-    <script src="js/nativedroid2.js"></script>
-    <script src="nd2settings.js"></script>
-    <!-- Script:end -->
+        <script>
 
-<script>
+            var endpoint = "http://localhost:8080/perreraWS/service/";
+            var perros = []; //array con perros
+            var perro_seleccionado;
+            $list = $('#list_home');
+            
+            $(function() {
+                console.log( "ready!" );
 
-    var endpoint = "http://localhost:8080/perreraWS/service/";
-    var perros = []; //array con perros
-    var perro_seleccionado;
+                $.ajax(endpoint + "perro/", {
+                    "type": "get"
+                    , "encoding": "UTF-8"
+                    , "data": {
+                        // nombre: valor
+                    }
+                    , "success": function (result) {
+                        console.log("Llego el contenido y no hubo error", result);
 
+                        perros = [];
+                        
+                        if (result == undefined){
+                            $list.html('<li style="color:red">No existen perros todavia, por favor da de alta uno</li>')
+                        }else{
+                            $.each(result, function(i,v){
+                               perros.push(v);
+                            });
 
+                            console.debug('cargados %i perros', perros.length );
+                            refreshListView();
 
-$(function() {
-    console.log( "ready!" );
+                            // indicar cuantos perros se han listado
+                            $('#pie').html("")
+                            var pie = 'Mostrando #perro.size# perros'+
+                                ' <a href="#page2">Ir a Pagina2</a>'
+                            pie = pie.replace('#perro.size#', perros.length)
+                            $('#pie').html(pie);                        
+                        }
+                    }
+                    , "error": function (result) {
+                        console.error("Este callback maneja los errores", result);
+                        $list.html('<li style="color:red">Servidor parado, perdona las molestias.</li>')
+                    }
+                });
 
-
-    //llamada Ajax
-    $.ajax(endpoint + "perro/", {
-        "type": "get"
-        , "encoding": "UTF-8"
-        , "data": {
-            // nombre: valor
-        }
-        , "success": function (result) {
-            console.log("Llego el contenido y no hubo error", result);
-
-            perros = [];
-            $.each(result, function(i,v){
-               perros.push(v);
             });
 
-            console.debug('cargados %i perros', perros.length );
-            refreshListView();
+            function refreshListView(){
 
-        }
-        , "error": function (result) {
-            console.error("Este callback maneja los errores", result);
-        }
-    });
+                $list.html('');
+                console.log('limpiada lista');
 
-});
+                var li = '<li onClick="detalle_perro(#posicion#)">'+
+                             '<a href="#">'+
+                                 '<img src="#perro.imagen#" />'+
+                                 '<h2>#perro.nombre#</h2>'+
+                                 '<p>#perro.raza#</p>'+
+                             '</a>'+
+                         '</li>';
 
-function refreshListView(){
+                var content = '';
+                var item;
+                $.each(perros, function(i,v){
+                    item = li;
+                    item = item.replace('#posicion#', i);
+                    item = item.replace('#perro.nombre#', v.nombre);
+                    item = item.replace('#perro.raza#', v.raza);
+                    item = item.replace('#perro.imagen#', v.imagen);
+                    content += item;
+                    
+                });
 
-     $list = $('#list_home');
-    $list.html('');
-    console.log('limpiada lista');
+                $list.html(content).listview('refresh');
+                console.log('lista recargada');
+                
 
-    var li = '<li onClick="detalle_perro(#posicion#)">'+
-                 '<a href="#">'+
-                     '<img src="#perro.imagen#" class="ui-thumbnail ui-thumbnail-circular" />'+
-                     '<h2>#perro.nombre#</h2>'+
-                     '<p>#perro.raza#</p>'+
-                 '</a>'+
-             '</li>';
+            }
+            
+            function detalle_perro(posicion){
+                console.debug('pulsado %i elemento de la lista valor %o', posicion, perros[posicion]);
+                
+                perro_seleccionado = perros[posicion];
+                
+                
+                // abrir ventana modal --> dialog
+                $.mobile.changePage( "#page_detalle", { role: "dialog" } );
+                
+            }
 
-    var content = '';
-    var item;
-    $.each(perros, function(i,v){
-        item = li;
-        item = item.replace('#posicion#', i);
-        item = item.replace('#perro.imagen#', v.imagen);
-        item = item.replace('#perro.nombre#', v.nombre);
-        item = item.replace('#perro.raza#', v.raza);
-        content += item;
-    });
+            $(document).on("pagebeforeshow", "#page_detalle", function(){
+                console.log("pagebeforeshow:#page_detalle");
+                
+                // cargar datos del perro selecionado
+                $('#detalle_perro_titulo').text(perro_seleccionado.nombre);
+                $('#detalle_perro_imagen').attr("src", perro_seleccionado.imagen);
+                $('#detalle_perro_raza').text(perro_seleccionado.raza);
 
-    $list.html(content).listview('refresh');
-    console.log('lista recargada');
-
-    //registar click en listview
-    /*
-     $list.click(function(event){
-         console.debug('click %o' , event.target.parentElement );
-     });
-    */
-
-}
-
-
-function detalle_perro( posicion ){
-    console.debug('pulsado %i elemento de la lista valor %o', posicion, perros[posicion]);
-
-    // Dialog present in a multipage document
-    $.mobile.changePage( "#page_detalle", { role: "dialog" } );
-
-}
-
-</script>
+            });
+            
+            $(document).onClick("#modificar_perro", function(){
+               console.log("Se ha pulsado el boton modificar") 
+            });
+        </script>
 
 
 </body>
