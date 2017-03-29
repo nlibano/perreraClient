@@ -1,4 +1,4 @@
-#PerreraClient - JQM
+# PerreraClient - JQM
 
 ![Alt text](screenshot.png?raw=true 'pantallazo App')
 
@@ -6,7 +6,7 @@ Proyecto Web con HTML5, CSS3 y JS, usamos JQueryMobile para realizar una App de 
 Para modernizar el frontend hemos añadido NativeDroid2 para conseguir un diseño Material Design.
 
 
-##Requisitos
+## Requisitos
 
 Instalar proyecto "perreraWebService" de https://github.com/ipartek/perreraWebService
 
