@@ -115,6 +115,11 @@
                         console.error("Este callback maneja los errores", result);
                         $list.html('<li style="color:red">Servidor parado, perdona las molestias.</li>')
                     }
+                    
+                    // evento onClick al pulsar boton modificar
+                    $('#').onClick("#modificar_perro", function(){
+                       console.log("Se ha pulsado el boton modificar") 
+                    });
                 });
 
             });
@@ -171,9 +176,6 @@
 
             });
             
-            $(document).onClick("#modificar_perro", function(){
-               console.log("Se ha pulsado el boton modificar") 
-            });
         </script>
 
 
